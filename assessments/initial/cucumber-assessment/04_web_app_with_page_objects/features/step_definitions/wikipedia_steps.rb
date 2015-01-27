@@ -38,3 +38,14 @@ end
 Then(/^I am shown names of (\d+) recently deceased individuals on the dashboard$/) do |arg1|
   pending # express the regexp above with the code you wish you had
 end
+
+
+And(/^I can access Wikinews from the dashboard$/) do
+  on_page WikipediaDashboard do |page|
+    page.in_the_news_element
+  end
+end
+
+Then(/^I am shown an ordered timeline of historical events for the current date on the dashboard$/) do
+
+end
