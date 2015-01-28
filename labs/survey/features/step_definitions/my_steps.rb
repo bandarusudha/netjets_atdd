@@ -1,4 +1,5 @@
 require 'page-object'
+require 'rspec'
 
 include PageObject::PageFactory
 

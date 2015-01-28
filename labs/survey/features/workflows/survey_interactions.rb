@@ -1,3 +1,5 @@
+include PageObject::PageFactory
+
 module SurveyInteractions
 
   def open_the_survey

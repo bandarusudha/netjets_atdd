@@ -3,17 +3,22 @@ class FlightSchedulePage
 
     include PageObject
 
-    page_url "www.southwest.com"
-
     text_field(:departure_city, :id => 'originAirport_displayed')
     text_field(:arrival_city, :id => 'destinationAirport_displayed')
     button(:search_button, :id => 'flightSchedulesForm_submitButton')
     a(:selected_date,:class=>'swa_tabs_travelDate')
+    table(:schedule_results, :class => 'swa_feature_flightStatus_results_table swa_tables_grayTable2')
 
-    def get_daily_schedule
+    def set_airports
       self.departure_city = "columbus"
       self.arrival_city = "las vegas"
-      self.search_button.click
+
+    end
+
+    def get_daily_schedule
+      self.search_button
+   p self.schedule_results_element[2][0].text
+
     end
 
     def today_schedule
