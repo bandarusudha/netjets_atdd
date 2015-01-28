@@ -24,10 +24,6 @@ Given /^I have done some arithmetic$/ do
   @calc.memadd
 end
 
-When /^I have __$/ do
-  @calc.clear
-end
-
 Then /^I should see the previously stored result$/ do
   assert_equal @result, @calc.current_display
 end
