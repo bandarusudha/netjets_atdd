@@ -15,11 +15,31 @@ class FlightSchedulePage
 
     end
 
-    def get_daily_schedule
-      self.search_button
-   p self.schedule_results_element[2][0].text
 
-    end
+    def get_daily_schedule
+        self.search_button
+
+
+      row_array = Array.new
+      self.schedule_results_element.each do |row|
+          row_array << row.text
+       p row_array
+      end
+end
+      # table_array = Array.new
+      #
+      # table_row1 = {}
+      # table_row1[:flightno] = '987'
+      # table_row1[:stops] = '1 stop'
+      #
+      # table array << table_row
+      #
+      # table_row2 = {}
+      #   table_row2[:flightno] = '31444'
+      #   table_row2[:stops] = '2 stop'
+      #
+      #   table array << table_row2
+
 
     def today_schedule
       return self.selected_date.text
