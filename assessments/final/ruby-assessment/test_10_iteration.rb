@@ -8,20 +8,20 @@ class AboutIteration < Test::Unit::TestCase
     array.each do |item|
       sum += item
     end
-    assert_equal __, sum
+    assert_equal 6, sum
   end
 
   def test_collect_transforms_elements_of_an_array
     array = [1, 2, 3]
     new_array = array.collect { |item| item + 10 }
-    assert_equal __, new_array
+    assert_equal [11,12,13], new_array
   end
 
   def test_select_selects_certain_items_from_an_array
     array = [1, 2, 3, 4, 5, 6]
 
     even_numbers = array.select { |item| (item % 2) == 0 }
-    assert_equal __, even_numbers
+    assert_equal [2,4,6], even_numbers
   end
 
 end

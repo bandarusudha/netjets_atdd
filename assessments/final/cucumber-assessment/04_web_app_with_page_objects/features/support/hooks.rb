@@ -8,6 +8,6 @@ Before do
   end
 end
 
-After do
-  @browser.close
-end
+# After do
+#   @browser.close
+# end

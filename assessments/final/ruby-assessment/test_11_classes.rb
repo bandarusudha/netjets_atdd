@@ -6,7 +6,7 @@ class AboutClasses < Test::Unit::TestCase
 
   def test_creating_new_objects_with_contructors
     fido = Dog.new
-    assert_equal __, fido.class
+    assert_equal Dog, fido.class
   end
 
   # ------------------------------------------------------------------
@@ -24,7 +24,7 @@ class AboutClasses < Test::Unit::TestCase
     fido = Dog3.new
     fido.set_name("Fido")
 
-    assert_equal __, fido.name
+    assert_equal "Fido", fido.name
   end
 
   # ------------------------------------------------------------------
@@ -37,7 +37,7 @@ class AboutClasses < Test::Unit::TestCase
     fido = Dog5.new
 
     fido.name = "Fido"
-    assert_equal __, fido.name
+    assert_equal "Fido", fido.name
   end
 
   # ------------------------------------------------------------------
@@ -51,14 +51,14 @@ class AboutClasses < Test::Unit::TestCase
 
   def test_providing_initial_values_for_instance_variables
     fido = Dog6.new("Fido")
-    assert_equal __, fido.name
+    assert_equal "Fido", fido.name
   end
 
   def test_different_objects_have_different_instance_variables
     fido = Dog6.new("Fido")
     rover = Dog6.new("Rover")
 
-    assert_equal __, rover.name != fido.name
+    assert_equal true, rover.name != fido.name
   end
 
 

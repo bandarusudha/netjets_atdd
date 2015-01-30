@@ -1,3 +1,6 @@
+require 'test/unit'
+include Test::Unit::Assertions
+
 $:.unshift(File.dirname(__FILE__) + '/../../lib')
 require 'calculator'
 
@@ -24,7 +27,7 @@ Given /^I have done some arithmetic$/ do
   @calc.memadd
 end
 
-When /^I have __$/ do
+When /^I have cleared the screen$/ do
   @calc.clear
 end
 
@@ -32,8 +35,8 @@ Then /^I should see the previously stored result$/ do
   assert_equal @result, @calc.current_display
 end
 
-When /^I use the special constant __$/ do |special_constant_name|
-  @calc.push_special __
+When /^I use the special constant (.*)$/ do |special_constant_name|
+  @calc.push_special special_constant_name
 end
 
 Then /^the current value on the screen should be (.*)$/ do |output|
