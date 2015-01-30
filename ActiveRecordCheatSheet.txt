@@ -1,0 +1,200 @@
+ActiveRecord cheat sheet / EXAMPLES
+
+INSTALL 
+=======  
+$ gem install activerecord
+in GEMFILE: gem ‘activerecord’
+
+REQUIRE 
+=======  
+require ‘active_record’
+
+HOW TO USE
+
+ESTABLISH A DATABASE CONNECTION 
+=======
+ActiveRecord::Base.establish_connection( :adapter => 'sqlite3',    :database => 'database_path')
+
+CREATE TABLE IN DATABASE
+=======
+ActiveRecord::Base.connection.execute <<-SQL
+  CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name VARCHAR NOT NULL,
+    last_name VARCHAR NOT NULL,
+  );
+SQL
+
+RELATIONSHIPS 
+======= 
+one-to-one:
+
+class Customer < ActiveRecord::Base 
+has_one :detail 
+end 
+
+class Detail < ActiveRecord::Base
+belongs_to :customer 
+end
+
+## to include automatic building of detail when instantiate a customer, add this to customer class:
+
+has_one :detail 
+after_initialize do 
+self.build_detail 
+end
+
+## to automatically destroy detail record when destroy customer record:
+
+has_one :detail, :dependent => :destroy
+
+## to hide child object, add the following to parent class:
+
+delegate :birthday, :gender, :city, :to => :detail
+OR
+delegate *Detail::ATTR_METHODS, :to => :detail
+
+## (must include ATTR_METHODS = [:birthday, :birthday=, :gender, :gender=, :city, :city=] in detail class to use 2nd option]
+
+one-to-many
+
+class Parent < ActiveRecord::Base 
+has_many :children 
+end 
+
+class Child < ActiveRecord::Base 
+belongs_to :parent 
+end
+
+## to destroy chid objects when parent in destroyed, add the following to the parent class:
+
+	has_many :children, :dependent => :destroy
+
+
+many-to-many
+
+class Magazine < ActiveRecord::Base 
+	has_many :subscriptions 
+	has_many :customers, :through => :subscriptions 
+end 
+
+class Customer < ActiveRecord::Base 
+	has_many :subscriptions 
+	has_many :magazines, :through => :subscriptions 
+end
+
+## this makes it easy to find a customer’s magazines:
+
+	@customer = customer.find(17)
+	@customer.magazines
+
+## it also makes it easy to find a customer’s subscriptions:
+
+	@customer.subscriptions
+
+CREATING RECORDS:
+=====================
+
+Single/Parent:
+
+myStudent1 = Student.new(:first_name => 'Ann', :last_name => 'Smith', :birthday => '1986-08-11')
+
+	myStudent1.save 
+
+
+Child:
+
+	(myStudent1.classes.new(:name => ‘Geometry’)).save
+
+	##note alternative method for saving and pluralized ‘classes’##
+
+
+
+QUERIES 
+=====================
+
+Find one by id:
+
+Customer.find(17)
+
+## finds customer with an id of 17
+
+Find related records by id: 
+
+Customer.find(17).detail.birthday 
+
+## finds birthday field for the customer with id = 17. Birthday field is contained in Details table.
+
+Find by label:
+
+Can do:
+- Person.where(:user_name => user_name).first
+- Person.where(:last_name => last_name).all
+- Person.where(:user_name => user_name, :password => password).first
+
+Better:
+- Person.find_by_user_name(user_name)
+- Person.find_all_by_last_name(last_name)
+- Person.find_by_user_name_and_password(user_name, password)
+
+List all:
+
+Contact.all.each do |contact|
+puts contact.first_name
+end
+   	
+## puts of first name for each contact in Contacts table
+
+Conditional:
+
+Student.where(:gender => 'male')
+
+## finds students with the value ‘male’ in the gender column
+
+LIKE:
+
+Contact.where("first_name LIKE 'A%'")
+OR
+Contact.where(‘first_name LIKE ?', “A%")
+
+## both examples above find contacts where first_name column begins with A. Some people prefer second for stylistic reasons
+
+## Using LIKE to find values in the middle of a string:
+
+Student.where("birthday LIKE '%-07-%'").each do |student|
+  puts student.first_name + " has a birthday in July"
+end
+
+## prints the first name of all students with birthdays in July
+
+Count:
+
+	Client.count
+	## prints count of number of records in Client table
+
+	Client.where(:first_name => 'Ryan').count
+
+## prints the the count of clients where first_name is Ryan
+
+
+Unique:
+
+	Client.select(:name).uniq
+
+## only grabs a single record per unique value in the :name field
+
+## A more complicated example using .uniq:
+
+contacts = Address.where(:state => 'CA').includes(:contact).collect do |address|
+  address.contact
+end
+
+contacts.uniq.each do |contact|
+  puts contact
+end
+
+## finds each address in CA and then prints out each contact with an address in CA only once
+
+## Another way doing this (via http://whatcodecraves.com/articles/2009/04/08/adventures-with-active-record-find):
+
+Fruit.all(:select => "DISTINCT fruits.*", ...)
